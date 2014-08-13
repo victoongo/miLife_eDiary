@@ -1,8 +1,8 @@
 set more off
 set matsize 11000
-cd "D:\milife"
+cd "$path"
 
-global path D:\E_Risk\data_acrchive
+global path $path
 global histocolor graphregion(lcolor(white) lwidth(thick) fcolor(white)) ///
 	plotregion(fcolor("247 247 247")) plotregion(margin(medium)) ///
  	fcolor("163 194 255") fintensity(100) lcolor("163 194 255") lwidth(none) normopts(lcolor(orange_red)) ///
@@ -12,12 +12,12 @@ global histocolor graphregion(lcolor(white) lwidth(thick) fcolor(white)) ///
 global piecolor /*missing*/ angle(0) plabel(_all name, gap(10)) line(lcolor(white)) intensity(inten30) legend(region(lcolor(white))) ///
 	graphregion(fcolor(white) lcolor(white) lwidth(none))
 
-do "D:\E_Risk\data_acrchive\html\syntax\page_headers.do"
+do "$path\html_data_dictionary\syntax\page_headers.do"
 
 ***********************child baseline****************************************************
-cd "D:\milife"
+cd "$path"
 
-use "D:\milife\childbl\ChildBLwrkMar17.2013.dta", clear
+use "$path\childbl\ChildBLwrkMar17.2013.dta", clear
 drop ctimestmp
 compress
 
@@ -74,7 +74,6 @@ foreach y of local nvlst {
 }
 htput </table></td></table><br>
 
-set scheme s2color
 foreach y of local svlst {
 	htput <hr><h4> Descriptive Analysis of Variable: <a NAME="`y'"></a>{ `y' }</h4>
 	htput <h4> Label: `: di " `: var label `y' ' " '</h4>
@@ -109,8 +108,8 @@ htclose
 
 
 ***********************day wide****************************************************
-cd "D:\milife"
-use "D:\milife\milife_daywide.dta", clear
+cd "$path"
+use "$path\milife_daywide.dta", clear
 compress
 
 ***** drop variables with all values missing or no variation
@@ -198,7 +197,6 @@ foreach y of local nvlst {
 }
 htput </table></td></table><br>
 
-set scheme s2color
 foreach y of local svlst {
 	htput <hr><h4> Descriptive Analysis of Variable: <a NAME="`y'"></a>{ `y' }</h4>
 	htput <h4> Label: `: di " `: var label `y' ' " '</h4>
