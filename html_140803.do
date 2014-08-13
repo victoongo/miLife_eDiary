@@ -72,7 +72,7 @@ foreach y of local svlst {
 htput </table></td></tr></table><br>
 
 foreach y of local svlst {
-	htput <hr><h4> Descriptive Analysis of Variable: <a NAME="`y'"></a>{ `y' }</h4>
+	htput <hr><h4> Descriptive Analysis of Variable: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
 	htput <h4> Label: `: di " `: var label `y' ' " '</h4>
 	lab var `y' "`y'"
 	replace `y'=subinstr(`y', "`", "", .)
@@ -123,10 +123,10 @@ htclose
 
 
 ***********************parent baseline****************************************************
-cd "$path\html_data_dictionary\childbl"
+cd "$path\html_data_dictionary\parbl"
 
-use "$path\childbl\ChildBLwrkMar17.2013.dta", clear
-drop ctimestmp
+use "$path\parbl\ParBLMom&DadCleanmergeMar17.2013.dta", clear
+*drop ctimestmp
 compress
 
 ***** drop variables with all values missing or no variation
@@ -148,7 +148,7 @@ foreach y of local 1lst {
 	drop m
 }
 unab alst: *
-unab idlst: *id* *ID*
+unab idlst: *id* //*ID*
 local vlst: list alst - idlst
 di "`vlst'"
 
@@ -166,11 +166,11 @@ macro list _all
 
 **** create html for all str variables. 
 capture htclose
-htopen using childblstr, replace
+htopen using parblstr, replace
 htput <link rel=stylesheet href="..\R2HTMLa.css" type=text/css>
 htput <body style="margin-top: 0; margin-bottom: 5px">
 htput <a NAME="top"></a>
-htput $childblstr_header
+htput $parblstr_header
 htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" cellspacing="2">
 htput <tr class=firstline><td>String Variable Names</td><td>Variable Labels</td></tr>
 foreach y of local svlst {
@@ -180,8 +180,8 @@ foreach y of local svlst {
 htput </table></td></tr></table><br>
 
 foreach y of local svlst {
-	htput <hr><h4> Descriptive Analysis of Variable: <a NAME="`y'"></a>{ `y' }</h4>
-	htput <h4> Label: `: di " `: var label `y' ' " '</h4>
+	htput <hr><h4> Variable Name: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
+	htput <h4> Variable Label: `: di " `: var label `y' ' " '</h4>
 	lab var `y' "`y'"
 	replace `y'=subinstr(`y', "`", "", .)
 	htsummaryv `y', head freq method(string) missing rowtotal close
@@ -198,11 +198,11 @@ htclose
 
 **** create html for all num variables. 
 capture htclose
-htopen using childbl, replace
+htopen using parbl, replace
 htput <link rel=stylesheet href="..\R2HTMLa.css" type=text/css>
 htput <body style="margin-top: 0; margin-bottom: 5px">
 htput <a NAME="top"></a>
-htput $childbl_header
+htput $parbl_header
 htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" cellspacing="2">
 htput <tr class=firstline><td>Numeric Variable Names</td><td>Variable Labels</td></tr>
 foreach y of local nvlst {
@@ -278,7 +278,7 @@ htopen using childfustr, replace
 htput <link rel=stylesheet href="..\R2HTMLa.css" type=text/css>
 htput <body style="margin-top: 0; margin-bottom: 5px">
 htput <a NAME="top"></a>
-htput $childblstr_header
+htput $childfustr_header
 htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" cellspacing="2">
 htput <tr class=firstline><td>String Variable Names</td><td>Variable Labels</td></tr>
 foreach y of local svlst {
@@ -288,8 +288,8 @@ foreach y of local svlst {
 htput </table></td></tr></table><br>
 
 foreach y of local svlst {
-	htput <hr><h4> Descriptive Analysis of Variable: <a NAME="`y'"></a>{ `y' }</h4>
-	htput <h4> Label: `: di " `: var label `y' ' " '</h4>
+	htput <hr><h4> Variable Name: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
+	htput <h4> Variable Label: `: di " `: var label `y' ' " '</h4>
 	lab var `y' "`y'"
 	replace `y'=subinstr(`y', "`", "", .)
 	htsummaryv `y', head freq method(string) missing rowtotal close
@@ -310,7 +310,7 @@ htopen using childfu, replace
 htput <link rel=stylesheet href="..\R2HTMLa.css" type=text/css>
 htput <body style="margin-top: 0; margin-bottom: 5px">
 htput <a NAME="top"></a>
-htput $childbl_header
+htput $childfu_header
 htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" cellspacing="2">
 htput <tr class=firstline><td>Numeric Variable Names</td><td>Variable Labels</td></tr>
 foreach y of local nvlst {
