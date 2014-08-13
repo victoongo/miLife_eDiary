@@ -2,6 +2,18 @@ set more off
 set matsize 11000
 cd "D:\milife"
 
+global path D:\E_Risk\data_acrchive
+global histocolor graphregion(lcolor(white) lwidth(thick) fcolor(white)) ///
+	plotregion(fcolor("247 247 247")) plotregion(margin(medium)) ///
+ 	fcolor("163 194 255") fintensity(100) lcolor("163 194 255") lwidth(none) normopts(lcolor(orange_red)) ///
+	yscale(noline) ylabel(#4, grid glwidth(medthick) glcolor(white)) ymtick(##2, noticks grid glwidth(vvvthin) glcolor(white)) ///
+	xscale(noline) xlabel(#4, grid glwidth(medthick) glcolor(white)) xmtick(##2, noticks grid glwidth(vvvthin) glcolor(white)) 
+	
+global piecolor /*missing*/ angle(0) plabel(_all name, gap(10)) line(lcolor(white)) intensity(inten30) legend(region(lcolor(white))) ///
+	graphregion(fcolor(white) lcolor(white) lwidth(none))
+
+do "D:\E_Risk\data_acrchive\html\syntax\page_headers.do"
+
 ***********************child baseline****************************************************
 cd "D:\milife"
 
@@ -68,7 +80,7 @@ foreach y of local svlst {
 	htput <h4> Label: `: di " `: var label `y' ' " '</h4>
 	lab var `y' "`y'"
 	replace `y'=subinstr(`y', "`", "", .)
-	htsummary `y', head freq method(string) missing rowtotal close
+	htsummaryv `y', head freq method(string) missing rowtotal close
 	/*if `r`y''<10 {
 		graph pie, over(`y') missing pl(_all name, color(gs12) gap(10)) legend(on)
 		**histogram `y', freq fi(inten0) lw(vvthin) xtitle("`y'") ytitle("Frequency, # of Responding Residents")
@@ -82,14 +94,14 @@ foreach y of local nvlst {
 	htput <h4> Label: `: di " `: var label `y' ' " '</h4>
 	lab var `y' "`y'"
 	if `r`y''<10 {
-		htsummary `y', head freq format(%8.2f) missing rowtotal close
-		*graph pie, over(`y') missing pl(_all name, color(gs12) gap(10)) legend(on)
+		htsummaryv `y', head freq format(%8.2f) missing rowtotal close
+		graph piev, over(`y') missing pl(_all name, color(gs12) gap(10)) legend(on)
 	}
 	else {
-		htsummary `y', head format(%8.2f) test close
-		*histogram `y', freq norm fi(inten0) lw(vvthin) title("Histogram") xtitle("`y'") ytitle("Frequency, # of Respondents")
+		htsummaryv `y', head format(%8.2f) test close
+		histogram `y', freq norm fi(inten0) lw(vvthin) title("Histogram") xtitle("`y'") ytitle("Frequency, # of Respondents")
 	}
-	*graph export img\childbl\img_`y'.png, replace
+	graph export img\childbl\img_`y'.png, replace
 	htput <br><img src="img\childbl\img_`y'.png">
 	htput <br><a href="#l`y'"><b>Back to List</b></a><br>
 }
