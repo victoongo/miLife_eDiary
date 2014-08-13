@@ -1,8 +1,8 @@
 set more off
 set matsize 11000
-cd "$path"
+cd "d:\milife"
 
-global path $path
+global path "d:\milife"
 global histocolor graphregion(lcolor(white) lwidth(thick) fcolor(white)) ///
 	plotregion(fcolor("247 247 247")) plotregion(margin(medium)) ///
  	fcolor("163 194 255") fintensity(100) lcolor("163 194 255") lwidth(none) normopts(lcolor(orange_red)) ///
@@ -15,7 +15,7 @@ global piecolor /*missing*/ angle(0) plabel(_all name, gap(10)) line(lcolor(whit
 do "$path\html_data_dictionary\syntax\page_headers.do"
 
 ***********************child baseline****************************************************
-cd "$path"
+cd "$path\html_data_dictionary\childbl"
 
 use "$path\childbl\ChildBLwrkMar17.2013.dta", clear
 drop ctimestmp
@@ -56,19 +56,49 @@ macro drop _1lst _alst _idlst _vlst
 
 macro list _all
 
-**** create html for all variables. 
+**** create html for all num variables. 
 capture htclose
 htopen using childbl, replace
-htput <link rel=stylesheet href="R2HTMLa.css" type=text/css>
+htput <link rel=stylesheet href="..\R2HTMLa.css" type=text/css>
+htput <body style="margin-top: 0; margin-bottom: 5px">
 htput <a NAME="top"></a>
+htput $childbl_header
+htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" cellspacing="2">
+htput <tr class=firstline><td>Numeric Variable Names</td><td>Variable Labels</td></tr>
+foreach y of local nvlst {
+	di "`y'"
+	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> `: di " `: var label `y' ' " ' </td></tr>
+}
+htput </table></td></tr></table><br>
+
+foreach y of local nvlst {
+	htput <hr><h4> Variable Name: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
+	htput <h4> Variable Label: `: di " `: var label `y' ' " '</h4>
+	lab var `y' "`y'"
+	if `r`y''<10 {
+		htsummaryv `y', head freq format(%8.2f) missing rowtotal close
+		graph piev, over(`y') $piecolor
+	}
+	else {
+		htsummaryv `y', head format(%8.2f) test close
+		histogram `y', freq norm title("Histogram") xtitle("`y'") ytitle("Frequency, # of Respondents") $histocolor
+	}
+	graph export img/`y'.png, replace
+	htput <br><img src="img/`y'.png">
+	htput <br><a href="#l`y'"><b>Back to List</b></a><br>
+}
+htclose
+
+**** create html for all str variables. 
+capture htclose
+htopen using childblstr, replace
+htput <link rel=stylesheet href="..\R2HTMLa.css" type=text/css>
+htput <body style="margin-top: 0; margin-bottom: 5px">
+htput <a NAME="top"></a>
+htput $childblstr_header
 htput <table cellspacing=0 border=1><td><table border="0" cellpadding="4" cellspacing="2">
 htput <tr class=firstline><td>String Variable Names</td><td>Varible Labels</td></tr>
 foreach y of local svlst {
-	di "`y'"
-	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'">`y'</a> </td><td> `: di " `: var label `y' ' " ' </td></tr>
-}
-htput <tr class=firstline><td>Numeric Variable Names</td><td>Varible Labels</td></tr>
-foreach y of local nvlst {
 	di "`y'"
 	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'">`y'</a> </td><td> `: di " `: var label `y' ' " ' </td></tr>
 }
@@ -81,27 +111,11 @@ foreach y of local svlst {
 	replace `y'=subinstr(`y', "`", "", .)
 	htsummaryv `y', head freq method(string) missing rowtotal close
 	/*if `r`y''<10 {
-		graph pie, over(`y') missing pl(_all name, color(gs12) gap(10)) legend(on)
-		**histogram `y', freq fi(inten0) lw(vvthin) xtitle("`y'") ytitle("Frequency, # of Responding Residents")
-		graph export img\childbl\`y'.png, replace
-		htput <img src="img\childbl\`y'.png">
-	}*/
-	htput <br><a href="#l`y'"><b>Back to List</b></a><br>
-}
-foreach y of local nvlst {
-	htput <hr><h4> Descriptive Analysis of Variable: <a NAME="`y'"></a>{ `y' }</h4>
-	htput <h4> Label: `: di " `: var label `y' ' " '</h4>
-	lab var `y' "`y'"
-	if `r`y''<10 {
-		htsummaryv `y', head freq format(%8.2f) missing rowtotal close
 		graph piev, over(`y') missing pl(_all name, color(gs12) gap(10)) legend(on)
-	}
-	else {
-		htsummaryv `y', head format(%8.2f) test close
-		histogram `y', freq norm fi(inten0) lw(vvthin) title("Histogram") xtitle("`y'") ytitle("Frequency, # of Respondents")
-	}
-	graph export img\childbl\img_`y'.png, replace
-	htput <br><img src="img\childbl\img_`y'.png">
+		**histogram `y', freq fi(inten0) lw(vvthin) xtitle("`y'") ytitle("Frequency, # of Responding Residents")
+		graph export img\`y'.png, replace
+		htput <img src="img\`y'.png">
+	}*/
 	htput <br><a href="#l`y'"><b>Back to List</b></a><br>
 }
 htclose
@@ -206,8 +220,8 @@ foreach y of local svlst {
 	/*if `r`y''<10 {
 		graph pie, over(`y') missing pl(_all name, color(gs12) gap(10)) legend(on)
 		**histogram `y', freq fi(inten0) lw(vvthin) xtitle("`y'") ytitle("Frequency, # of Responding Residents")
-		graph export img\daywide\img_`y'.png, replace
-		htput <img src="img\daywide\img_`y'.png">
+		graph export img\`y'.png, replace
+		htput <img src="img\`y'.png">
 	}*/
 	htput <br><a href="#l`y'"><b>Back to List</b></a><br>
 }
@@ -223,8 +237,8 @@ foreach y of local nvlst {
 		htsummary `y', head format(%8.2f) test close
 		*histogram `y', freq norm fi(inten0) lw(vvthin) title("Histogram") xtitle("`y'") ytitle("Frequency, # of Person-days")
 	}
-	*graph export img\daywide\img_`y'.png, replace
-	htput <br><img src="img\daywide\img_`y'.png">
+	*graph export img\`y'.png, replace
+	htput <br><img src="img\`y'.png">
 	htput <br><a href="#l`y'"><b>Back to List</b></a><br>
 }
 htclose
