@@ -62,12 +62,13 @@ foreach pre of local survey {
 	htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" cellspacing="2">
 	htput <tr class=firstline><td>String Variable Names</td><td>Variable Labels</td></tr>
 	foreach y of local svlst {
-		di "`y'"
+		*di "`y'"
 		htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> `: di " `: var label `y' ' " ' </td></tr>
 	}
 	htput </table></td></tr></table><br>
 
 	foreach y of local svlst {
+		*di "`y'"
 		htput <hr><h4> Variable Name: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
 		htput <h4> Variable Label: `: di " `: var label `y' ' " '</h4>
 		lab var `y' "`y'"
@@ -94,24 +95,25 @@ foreach pre of local survey {
 	htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" cellspacing="2">
 	htput <tr class=firstline><td>Numeric Variable Names</td><td>Variable Labels</td></tr>
 	foreach y of local nvlst {
-		di "`y'"
+		*di "`y'"
 		htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> `: di " `: var label `y' ' " ' </td></tr>
 	}
 	htput </table></td></tr></table><br>
 
 	foreach y of local nvlst {
+		di "`y'"
 		htput <hr><h4> Variable Name: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
 		htput <h4> Variable Label: `: di " `: var label `y' ' " '</h4>
 		lab var `y' "`y'"
 		if `r`y''<10 {
 			htsummaryv `y', head freq format(%8.2f) missing rowtotal close
-			graph pie, over(`y') $piecolor
+			*graph pie, over(`y') $piecolor
 		}
 		else {
 			htsummaryv `y', head format(%8.2f) test close
-			histogram `y', freq norm title("Histogram") xtitle("`y'") ytitle("Frequency, # of Respondents") $histocolor
+			*histogram `y', freq norm title("Histogram") xtitle("`y'") ytitle("Frequency, # of Respondents") $histocolor
 		}
-		graph export "img/`y'.png", replace
+		*graph export "img/`y'.png", replace
 		htput <img src="img/`y'.png">
 		htput <br><a href="#l`y'"><b>Back to List</b></a><br>
 	}

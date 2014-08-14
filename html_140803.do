@@ -54,7 +54,7 @@ di "`nvlst'"
 *di "`v2lst'"
 macro drop _1lst _alst _idlst _vlst 
 
-macro list _all
+*macro list _all
 
 **** create html for all str variables. 
 capture htclose
@@ -66,12 +66,13 @@ htput $childblstr_header
 htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" cellspacing="2">
 htput <tr class=firstline><td>String Variable Names</td><td>Variable Labels</td></tr>
 foreach y of local svlst {
-	di "`y'"
+	*di "`y'"
 	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> `: di " `: var label `y' ' " ' </td></tr>
 }
 htput </table></td></tr></table><br>
 
 foreach y of local svlst {
+	*di "`y'"
 	htput <hr><h4> Descriptive Analysis of Variable: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
 	htput <h4> Label: `: di " `: var label `y' ' " '</h4>
 	lab var `y' "`y'"
@@ -98,24 +99,25 @@ htput $childbl_header
 htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" cellspacing="2">
 htput <tr class=firstline><td>Numeric Variable Names</td><td>Variable Labels</td></tr>
 foreach y of local nvlst {
-	di "`y'"
+	*di "`y'"
 	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> `: di " `: var label `y' ' " ' </td></tr>
 }
 htput </table></td></tr></table><br>
 
 foreach y of local nvlst {
+	di "`y'"
 	htput <hr><h4> Variable Name: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
 	htput <h4> Variable Label: `: di " `: var label `y' ' " '</h4>
 	lab var `y' "`y'"
 	if `r`y''<10 {
 		htsummaryv `y', head freq format(%8.2f) missing rowtotal close
-		graph pie, over(`y') $piecolor
+		*graph pie, over(`y') $piecolor
 	}
 	else {
 		htsummaryv `y', head format(%8.2f) test close
-		histogram `y', freq norm title("Histogram") xtitle("`y'") ytitle("Frequency, # of Respondents") $histocolor
+		*histogram `y', freq norm title("Histogram") xtitle("`y'") ytitle("Frequency, # of Respondents") $histocolor
 	}
-	graph export "img/`y'.png", replace
+	*graph export "img/`y'.png", replace
 	htput <img src="img/`y'.png">
 	htput <br><a href="#l`y'"><b>Back to List</b></a><br>
 }
@@ -127,6 +129,7 @@ cd "$path\html_data_dictionary\parbl"
 
 use "$path\parbl\ParBLMom&DadCleanmergeMar17.2013.dta", clear
 *drop ctimestmp
+drop pmontot
 compress
 
 ***** drop variables with all values missing or no variation
@@ -162,7 +165,7 @@ di "`nvlst'"
 *di "`v2lst'"
 macro drop _1lst _alst _idlst _vlst 
 
-macro list _all
+*macro list _all
 
 **** create html for all str variables. 
 capture htclose
@@ -174,12 +177,13 @@ htput $parblstr_header
 htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" cellspacing="2">
 htput <tr class=firstline><td>String Variable Names</td><td>Variable Labels</td></tr>
 foreach y of local svlst {
-	di "`y'"
+	*di "`y'"
 	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> `: di " `: var label `y' ' " ' </td></tr>
 }
 htput </table></td></tr></table><br>
 
 foreach y of local svlst {
+	*di "`y'"
 	htput <hr><h4> Variable Name: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
 	htput <h4> Variable Label: `: di " `: var label `y' ' " '</h4>
 	lab var `y' "`y'"
@@ -206,24 +210,25 @@ htput $parbl_header
 htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" cellspacing="2">
 htput <tr class=firstline><td>Numeric Variable Names</td><td>Variable Labels</td></tr>
 foreach y of local nvlst {
-	di "`y'"
+	*di "`y'"
 	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> `: di " `: var label `y' ' " ' </td></tr>
 }
 htput </table></td></tr></table><br>
 
 foreach y of local nvlst {
+	di "`y'"
 	htput <hr><h4> Variable Name: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
 	htput <h4> Variable Label: `: di " `: var label `y' ' " '</h4>
 	lab var `y' "`y'"
 	if `r`y''<10 {
-		htsummaryv `y', head freq format(%8.2f) missing rowtotal close
-		graph pie, over(`y') $piecolor
+		htsummaryv `y', head freq format(%12.0g) missing rowtotal close
+		*graph pie, over(`y') $piecolor
 	}
 	else {
 		htsummaryv `y', head format(%8.2f) test close
-		histogram `y', freq norm title("Histogram") xtitle("`y'") ytitle("Frequency, # of Respondents") $histocolor
+		*histogram `y', freq norm title("Histogram") xtitle("`y'") ytitle("Frequency, # of Respondents") $histocolor
 	}
-	graph export "img/`y'.png", replace
+	*graph export "img/`y'.png", replace
 	htput <img src="img/`y'.png">
 	htput <br><a href="#l`y'"><b>Back to List</b></a><br>
 }
@@ -270,7 +275,7 @@ di "`nvlst'"
 *di "`v2lst'"
 macro drop _1lst _alst _idlst _vlst 
 
-macro list _all
+*macro list _all
 
 **** create html for all str variables. 
 capture htclose
@@ -282,12 +287,13 @@ htput $childfustr_header
 htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" cellspacing="2">
 htput <tr class=firstline><td>String Variable Names</td><td>Variable Labels</td></tr>
 foreach y of local svlst {
-	di "`y'"
+	*di "`y'"
 	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> `: di " `: var label `y' ' " ' </td></tr>
 }
 htput </table></td></tr></table><br>
 
 foreach y of local svlst {
+	*di "`y'"
 	htput <hr><h4> Variable Name: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
 	htput <h4> Variable Label: `: di " `: var label `y' ' " '</h4>
 	lab var `y' "`y'"
@@ -314,12 +320,108 @@ htput $childfu_header
 htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" cellspacing="2">
 htput <tr class=firstline><td>Numeric Variable Names</td><td>Variable Labels</td></tr>
 foreach y of local nvlst {
-	di "`y'"
+	*di "`y'"
 	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> `: di " `: var label `y' ' " ' </td></tr>
 }
 htput </table></td></tr></table><br>
 
 foreach y of local nvlst {
+	di "`y'"
+	htput <hr><h4> Variable Name: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
+	htput <h4> Variable Label: `: di " `: var label `y' ' " '</h4>
+	lab var `y' "`y'"
+	if `r`y''<10 {
+		htsummaryv `y', head freq format(%8.2f) missing rowtotal close
+		*graph pie, over(`y') $piecolor
+	}
+	else {
+		htsummaryv `y', head format(%8.2f) test close
+		*histogram `y', freq norm title("Histogram") xtitle("`y'") ytitle("Frequency, # of Respondents") $histocolor
+	}
+	*graph export "img/`y'.png", replace
+	htput <img src="img/`y'.png">
+	htput <br><a href="#l`y'"><b>Back to List</b></a><br>
+}
+htclose
+
+***********************genotype****************************************************
+cd "$path\html_data_dictionary\geno"
+
+use "$path\Gdata\miLifebioSalivadata.dta", clear
+*drop ctimestmp
+compress
+
+***** drop variables with all values missing or no variation
+unab 1lst: *
+foreach y of local 1lst {
+	*di "`y'"
+	egen m=total(missing(`y'))
+	*quietly: inspect `y'
+	quietly: tab `y'
+	*di "`y'" "==" r(r)
+	if m==_N { //| r(r)==1 {
+		drop `y' 
+		di "`y'"
+	}
+	else{
+		local r`y'=r(r)
+		di `r`y''
+	}
+	drop m
+}
+unab alst: *
+unab idlst: *id* *ID*
+local vlst: list alst - idlst
+di "`vlst'"
+
+ds `vlst', has(type string)
+*di "`r(varlist)'"
+local svlst "`r(varlist)'"
+local nvlst: list vlst - svlst
+*local v2lst `svlst' `nvlst'
+di "`svlst'"
+di "`nvlst'"
+*di "`v2lst'"
+macro drop _1lst _alst _idlst _vlst 
+
+*macro list _all
+
+**** create html for all str variables. 
+capture htclose
+htopen using geno, replace
+htput <link rel=stylesheet href="..\R2HTMLa.css" type=text/css>
+htput <body style="margin-top: 0; margin-bottom: 5px">
+htput <a NAME="top"></a>
+htput $geno_header
+htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" cellspacing="2">
+htput <tr class=firstline><td>String Variable Names</td><td>Variable Labels</td></tr>
+foreach y of local svlst {
+	*di "`y'"
+	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> `: di " `: var label `y' ' " ' </td></tr>
+}
+htput </table></td></tr></table><br>
+
+htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" cellspacing="2">
+htput <tr class=firstline><td>Numeric Variable Names</td><td>Variable Labels</td></tr>
+foreach y of local nvlst {
+	*di "`y'"
+	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> `: di " `: var label `y' ' " ' </td></tr>
+}
+htput </table></td></tr></table><br>
+
+
+foreach y of local svlst {
+	*di "`y'"
+	htput <hr><h4> Variable Name: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
+	htput <h4> Variable Label: `: di " `: var label `y' ' " '</h4>
+	lab var `y' "`y'"
+	replace `y'=subinstr(`y', "`", "", .)
+	htsummaryv `y', head freq method(string) missing rowtotal close
+	htput <br><a href="#l`y'"><b>Back to List</b></a><br>
+}
+
+foreach y of local nvlst {
+	di "`y'"
 	htput <hr><h4> Variable Name: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
 	htput <h4> Variable Label: `: di " `: var label `y' ' " '</h4>
 	lab var `y' "`y'"
