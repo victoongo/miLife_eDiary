@@ -12,7 +12,7 @@ di "`clst'"
 keep `clst'
 macro drop _alst _olst _clst 
 
-local survey childblcon parblcon amcon ascon pmcon dailycon personmean supportvar
+local survey childblcon /*parblcon amcon ascon pmcon dailycon supportvar*/personmean
 run "$path\varcon_list.do"
 local childblcon_dir childbl
 local parblcon_dir parbl
@@ -27,6 +27,8 @@ foreach pre of local survey {
 	cd "$path\html_data_dictionary/``pre'_dir'"
 	di "`pre'" 
 	di "$`pre'"
+	
+	if "`pre'"=="personmean" keep if first==1
 	
 	**** create html for all num variables. 
 	capture htclose

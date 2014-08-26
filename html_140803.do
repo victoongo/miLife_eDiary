@@ -16,8 +16,14 @@ do "$path\html_data_dictionary\syntax\page_headers.do"
 
 ***********************child baseline****************************************************
 cd "$path\html_data_dictionary\childbl"
-
-use "$path\childbl\ChildBLwrkMar17.2013.dta", clear
+local filename "ChildBL\ChildBLwrkMar17.2013"
+!"C:\Program Files\R\R-3.1.1\bin\Rscript.exe" --slave D:/milife/html_data_dictionary/syntax/long_varlab.R "$path/`filename'" >D:/milife/long_varlab.out
+insheet variable question using "$path/`filename'_labels.txt", tab clear
+drop if question==""
+forvalues v = 1/`=_N' /*or `: di _N'*/ {
+	local `: di variable[`v']' `: di question[`v']'
+}
+use "$path/`filename'.dta", clear
 drop ctimestmp
 compress
 
@@ -67,14 +73,14 @@ htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" ce
 htput <tr class=firstline><td>String Variable Names</td><td>Variable Labels</td></tr>
 foreach y of local svlst {
 	*di "`y'"
-	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> `: di " `: var label `y' ' " ' </td></tr>
+	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> ``y'' </td></tr>
 }
 htput </table></td></tr></table><br>
 
 foreach y of local svlst {
 	*di "`y'"
 	htput <hr><h4> Descriptive Analysis of Variable: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
-	htput <h4> Label: `: di " `: var label `y' ' " '</h4>
+	htput <h4> Label: ``y''</h4>
 	lab var `y' "`y'"
 	replace `y'=subinstr(`y', "`", "", .)
 	htsummaryv `y', head freq method(string) missing rowtotal close
@@ -100,14 +106,14 @@ htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" ce
 htput <tr class=firstline><td>Numeric Variable Names</td><td>Variable Labels</td></tr>
 foreach y of local nvlst {
 	*di "`y'"
-	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> `: di " `: var label `y' ' " ' </td></tr>
+	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> ``y'' </td></tr>
 }
 htput </table></td></tr></table><br>
 
 foreach y of local nvlst {
 	di "`y'"
 	htput <hr><h4> Variable Name: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
-	htput <h4> Variable Label: `: di " `: var label `y' ' " '</h4>
+	htput <h4> Variable Label: ``y''</h4>
 	lab var `y' "`y'"
 	if `r`y''<10 {
 		htsummaryv `y', head freq format(%8.2f) missing rowtotal close
@@ -126,10 +132,16 @@ htclose
 
 ***********************parent baseline****************************************************
 cd "$path\html_data_dictionary\parbl"
-
-use "$path\parbl\ParBLMom&DadCleanmergeMar17.2013.dta", clear
+local filename "parbl\ParBLMom_DadCleanmergeMar17.2013"
+!"C:\Program Files\R\R-3.1.1\bin\Rscript.exe" --slave D:/milife/html_data_dictionary/syntax/long_varlab.R "$path/`filename'" >D:/milife/long_varlab.out
+insheet variable question using "$path/`filename'_labels.txt", tab clear
+drop if question==""
+forvalues v = 1/`=_N' /*or `: di _N'*/ {
+	local `: di variable[`v']' `: di question[`v']'
+}
+use "$path/`filename'.dta", clear
 *drop ctimestmp
-drop pmontot
+*drop pmontot
 compress
 
 ***** drop variables with all values missing or no variation
@@ -178,14 +190,14 @@ htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" ce
 htput <tr class=firstline><td>String Variable Names</td><td>Variable Labels</td></tr>
 foreach y of local svlst {
 	*di "`y'"
-	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> `: di " `: var label `y' ' " ' </td></tr>
+	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> ``y'' </td></tr>
 }
 htput </table></td></tr></table><br>
 
 foreach y of local svlst {
 	*di "`y'"
 	htput <hr><h4> Variable Name: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
-	htput <h4> Variable Label: `: di " `: var label `y' ' " '</h4>
+	htput <h4> Variable Label: ``y''</h4>
 	lab var `y' "`y'"
 	replace `y'=subinstr(`y', "`", "", .)
 	htsummaryv `y', head freq method(string) missing rowtotal close
@@ -211,24 +223,25 @@ htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" ce
 htput <tr class=firstline><td>Numeric Variable Names</td><td>Variable Labels</td></tr>
 foreach y of local nvlst {
 	*di "`y'"
-	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> `: di " `: var label `y' ' " ' </td></tr>
+	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> ``y'' </td></tr>
 }
 htput </table></td></tr></table><br>
 
 foreach y of local nvlst {
 	di "`y'"
 	htput <hr><h4> Variable Name: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
-	htput <h4> Variable Label: `: di " `: var label `y' ' " '</h4>
+	htput <h4> Variable Label: ``y''</h4>
 	lab var `y' "`y'"
-	if `r`y''<10 {
+	local vartype: type `y'
+	if `r`y''<10 & "`vartype'"~="double" & "`vartype'"~="float" {
 		htsummaryv `y', head freq format(%12.0g) missing rowtotal close
-		*graph pie, over(`y') $piecolor
+		graph pie, over(`y') $piecolor
 	}
 	else {
 		htsummaryv `y', head format(%8.2f) test close
-		*histogram `y', freq norm title("Histogram") xtitle("`y'") ytitle("Frequency, # of Respondents") $histocolor
+		histogram `y', freq norm title("Histogram") xtitle("`y'") ytitle("Frequency, # of Respondents") $histocolor
 	}
-	*graph export "img/`y'.png", replace
+	graph export "img/`y'.png", replace
 	htput <img src="img/`y'.png">
 	htput <br><a href="#l`y'"><b>Back to List</b></a><br>
 }
@@ -237,8 +250,15 @@ htclose
 
 ***********************child follow up****************************************************
 cd "$path\html_data_dictionary\childfu"
+local filename "ChildFlwUp\CFUclean6.3.2013"
+!"C:\Program Files\R\R-3.1.1\bin\Rscript.exe" --slave D:/milife/html_data_dictionary/syntax/long_varlab.R "$path/`filename'" >D:/milife/long_varlab.out
+insheet variable question using "$path/`filename'_labels.txt", tab clear
+drop if question==""
+forvalues v = 1/`=_N' /*or `: di _N'*/ {
+	local `: di variable[`v']' `: di question[`v']'
+}
+use "$path/`filename'.dta", clear
 
-use "$path\ChildFlwUp\CFUclean6.3.2013.dta", clear
 *drop ctimestmp
 compress
 
@@ -288,14 +308,14 @@ htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" ce
 htput <tr class=firstline><td>String Variable Names</td><td>Variable Labels</td></tr>
 foreach y of local svlst {
 	*di "`y'"
-	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> `: di " `: var label `y' ' " ' </td></tr>
+	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> ``y'' </td></tr>
 }
 htput </table></td></tr></table><br>
 
 foreach y of local svlst {
 	*di "`y'"
 	htput <hr><h4> Variable Name: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
-	htput <h4> Variable Label: `: di " `: var label `y' ' " '</h4>
+	htput <h4> Variable Label: ``y''</h4>
 	lab var `y' "`y'"
 	replace `y'=subinstr(`y', "`", "", .)
 	htsummaryv `y', head freq method(string) missing rowtotal close
@@ -321,14 +341,14 @@ htput <table cellspacing=0 border=1><tr><td><table border="0" cellpadding="4" ce
 htput <tr class=firstline><td>Numeric Variable Names</td><td>Variable Labels</td></tr>
 foreach y of local nvlst {
 	*di "`y'"
-	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> `: di " `: var label `y' ' " ' </td></tr>
+	htput <tr><td><a NAME="l`y'"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#`y'"><b>`y'</b></a> </td><td> ``y'' </td></tr>
 }
 htput </table></td></tr></table><br>
 
 foreach y of local nvlst {
 	di "`y'"
 	htput <hr><h4> Variable Name: <a NAME="`y'"></a><span class="vname"> `y' </span></h4>
-	htput <h4> Variable Label: `: di " `: var label `y' ' " '</h4>
+	htput <h4> Variable Label: ``y''</h4>
 	lab var `y' "`y'"
 	if `r`y''<10 {
 		htsummaryv `y', head freq format(%8.2f) missing rowtotal close
